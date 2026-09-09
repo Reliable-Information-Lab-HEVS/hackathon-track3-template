@@ -1,0 +1,13 @@
+# Local inference config (copy from inference.env.example; never commit the real key)
+inference.env
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
