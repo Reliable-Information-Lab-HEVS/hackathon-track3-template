@@ -15,12 +15,24 @@ We note that usage of this template is **optional**. You can start from scratch 
 
 The siren record and the monitoring feed are distributed separately as an encrypted zip (see the website).
 
-## Run
+## Deploying on your team VM
+
+Your VM already has a TLS certificate and a public hostname,
+`llmhack-team-N.hackathon.intlab.ch`. `compose.yaml` in this repository runs two
+containers: **Caddy**, which terminates TLS on that hostname, and **your app**,
+which Caddy reaches at `app:8080` on the internal network.
 
 ```bash
-docker build -t track3 .
-docker run -p 8080:8080 -v /path/to/track3_data:/corpus:ro --env-file inference.env track3
+cp inference.env.example inference.env     # then fill in the key and model
+nano Caddyfile                             # replace N with your team number
+mkdir -p data && unzip <track3_data.zip> -d data
+docker compose up -d --build
 ```
 
+Check it from another machine:
+
+```bash
+curl https://llmhack-team-N.hackathon.intlab.ch/health
+```
 
 

@@ -1,0 +1,48 @@
+# Deployment for your team VM: Caddy terminates TLS on your public hostname and
+# reverse-proxies to your app over the compose network.
+#
+#   docker compose up -d --build
+#
+# `app` is deliberately NOT published to the host. Only Caddy is reachable from
+# outside, on 80 and 443, and it reaches your application as `app:8080` on the
+# internal network. Your app must therefore bind 0.0.0.0 inside the container,
+# which the template already does.
+
+services:
+  proxy:
+    image: caddy:latest
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - /etc/tls/llmhack/fullchain.pem:/etc/caddy/certs/fullchain.pem:ro
+      - /etc/tls/llmhack/privkey.pem:/etc/caddy/certs/privkey.pem:ro
+    depends_on:
+      - app
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    # Inference credentials. Copy inference.env.example to inference.env first,
+    # or compose will refuse to start.
+    env_file:
+      - inference.env
+    # The track data, mounted read-only at /corpus. Unzip it into ./data, or point
+    # CORPUS_DIR elsewhere:  CORPUS_DIR=/opt/track3_data docker compose up -d
+    volumes:
+      - ${CORPUS_DIR:-./data}:/corpus:ro
+    expose:
+      - "8080"
+    # Advisory only: Caddy does not wait on this, so removing /health will not
+    # stop you being proxied. It makes `docker compose ps` show whether your app
+    # actually came up.
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request;urllib.request.urlopen('http://localhost:8080/health')\" || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 30s
