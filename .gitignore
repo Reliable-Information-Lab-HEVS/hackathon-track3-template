@@ -2,6 +2,9 @@
 inference.env
 .env
 
+# Track data (mounted, never committed)
+data/
+
 # Python
 __pycache__/
 *.pyc
