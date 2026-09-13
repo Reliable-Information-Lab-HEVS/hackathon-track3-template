@@ -31,10 +31,11 @@ services:
     # or compose will refuse to start.
     env_file:
       - inference.env
-    # The track data, mounted read-only at /corpus. Unzip it into ./data, or point
-    # CORPUS_DIR elsewhere:  CORPUS_DIR=/opt/track3_data docker compose up -d
+    # The track data. Unzip it into ./corpus, which is mounted read-only at the
+    # same path inside the container. To keep it elsewhere on the VM, point
+    # CORPUS_DIR at that directory:  CORPUS_DIR=/opt/track3_data docker compose up -d
     volumes:
-      - ${CORPUS_DIR:-./data}:/corpus:ro
+      - ${CORPUS_DIR:-./corpus}:/corpus:ro
     expose:
       - "8080"
     # Advisory only: Caddy does not wait on this, so removing /health will not

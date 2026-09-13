@@ -3,7 +3,7 @@ inference.env
 .env
 
 # Track data (mounted, never committed)
-data/
+corpus/
 
 # Python
 __pycache__/
