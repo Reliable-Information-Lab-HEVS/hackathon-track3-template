@@ -2,7 +2,7 @@
 
 Starter skeleton for the Track 3 air threat advisor. Read the scenario, the data
 description, the full I/O contract and the submission rules on the website:
-<https://hackathon-armasuisse.github.io/tracks/track-3/>
+<https://reliable-information-lab-hevs.github.io/actm-fall-2026.github.io/tracks/track-3/>
 
 This template uses FastAPI and Uvicorn as a simple starting point, for more information see this [description](https://www.geeksforgeeks.org/python/fastapi-uvicorn/). We note that usage of this template is **optional**. You can start from scratch or use your own framework, as long as you meet the requirements.
 
@@ -19,8 +19,8 @@ The siren record and the monitoring feed are distributed separately as an encryp
 
 ## Deploying on your team VM
 
-Your VM already has a TLS certificate and a public hostname,
-`llmhack-team-N.hackathon.intlab.ch`. `compose.yaml` in this repository runs two
+Your VM already has a hostname, `actm-teamN.reliable-information-lab.ch`, and a
+TLS certificate for it under `/etc/tls/actm/`. `compose.yaml` in this repository runs two
 containers: **Caddy**, which terminates TLS on that hostname, and **your app**,
 which Caddy reaches at `app:8080` on the internal network. Before starting to build, do the following two steps:
 
